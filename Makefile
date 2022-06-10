@@ -33,7 +33,7 @@ install: clean
 	poetry install
 
 run:
-	poetry run python3 -m wallet --debug server run --host=$(HOST) --port=$(PORT) -t develop
+	poetry run python3 -m activity --debug server run --host=$(HOST) --port=$(PORT)
 
 test:
 	poetry run pytest
