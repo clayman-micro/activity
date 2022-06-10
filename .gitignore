@@ -52,6 +52,7 @@ nosetests.xml
 *.tar.gz
 .vscode
 .env
+.envrc
 conf/*
 venv
 
