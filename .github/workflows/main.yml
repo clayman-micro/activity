@@ -107,6 +107,7 @@ jobs:
           NAMESPACE: staging
           ACTIVITY_VERSION: master
           REPLICAS: 2
+          SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
         with:
           params: -i ansible/inventory ansible/deploy.yml
 

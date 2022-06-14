@@ -116,6 +116,7 @@ jobs:
           NAMESPACE: production
           ACTIVITY_VERSION: ${{ steps.vars.outputs.tag }}
           REPLICAS: 2
+          SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
         with:
           params: -i ansible/inventory ansible/deploy.yml
 
