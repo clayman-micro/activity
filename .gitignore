@@ -53,6 +53,7 @@ nosetests.xml
 .vscode
 .env
 .envrc
+ansible/.credentials
 conf/*
 venv
 

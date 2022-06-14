@@ -93,3 +93,27 @@ jobs:
           args: |
             ${{ github.repository }} build version `master` - ${{ job.status }}
             Image `ghcr.io/${{ github.repository }}:master` ready to use
+
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Deploy new version
+        id: vault
+        uses: clayman-micro/action-deploy@v2.0.0
+        env:
+          NAMESPACE: staging
+          ACTIVITY_VERSION: master
+          REPLICAS: 2
+        with:
+          params: -i ansible/inventory ansible/deploy.yml
+
+      - name: Send notification to Telegram
+        if: always()
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT }}
+          token: ${{ secrets.TELEGRAM_SECRET }}
+          args: ${{ github.repository }} deploy version `master` - ${{ job.status }}
