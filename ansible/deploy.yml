@@ -11,11 +11,10 @@
 
     - name: Write private key to file
       copy:
-        content: "{{ lookup('env','SSH_PUBLIC_KEY') }}\n"
+        content: "{{ lookup('env','SSH_PUBLIC_KEY') }}{{'\n'}}"
         dest: "{{ inventory_dir }}/.credentials/{{ item }}/users/{{ hostvars[item]['ansible_user'] }}/id_rsa"
         mode: 0600
       with_items: "{{ groups['servers'] }}"
-
 
 - hosts: servers
   become: true
