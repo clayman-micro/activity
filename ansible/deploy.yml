@@ -41,7 +41,7 @@
     - name: Get Helm charts
       ansible.builtin.git:
         repo: "https://github.com/clayman-micro/helm-chart.git"
-        version: v1.1.0
+        version: v2.0.0
         dest: /opt/micro/helm-chart
 
     - name: Deploy Helm chart
