@@ -1,8 +1,10 @@
 import click
+import structlog
 import uvloop
 
 from activity.app import init
 from activity.cli.server import server
+from activity.logging import configure_logging
 
 
 @click.group()
@@ -12,9 +14,13 @@ def cli(ctx, debug: bool = False) -> None:
     """Main application entry point for command line interface."""
     uvloop.install()
 
-    app = init("activity")
+    configure_logging(app_name="activity", debug=debug)
+    logger = structlog.get_logger("activity")
+
+    app = init("activity", logger=logger)
 
     ctx.obj["app"] = app
+    ctx.obj["logger"] = logger
 
 
 cli.add_command(server, name="server")

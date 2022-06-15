@@ -50,7 +50,8 @@ def run(ctx, host, port) -> None:
         host: Application host.
         port: Application port.
     """
-    app = ctx.obj["app"]
+    app: web.Application = ctx.obj["app"]
+    logger = ctx.obj["logger"]
 
     try:
         port = int(port)
@@ -62,12 +63,19 @@ def run(ctx, host, port) -> None:
 
     if not host:
         host = "127.0.0.1"
-        # address = "127.0.0.1"
-    # else:
-    # address = get_address()
+        address = "127.0.0.1"
+    else:
+        address = get_address()
 
-    # app["logger"].info(f"Application serving on http://{address}:{port}")
+    app.logger.info(f"Application serving on http://{address}:{port}")
 
-    web.run_app(app, host=host, port=port)
+    web.run_app(
+        app,
+        host=host,
+        port=port,
+        access_log=logger.bind(context="access"),
+        access_log_format="%r",
+        print=lambda foo: None,
+    )
 
-    # app["logger"].info("Shutdown application")
+    app.logger.info("Shutdown application")
