@@ -2,6 +2,7 @@ from typing import NamedTuple
 
 import pkg_resources  # type: ignore
 import pytest  # type: ignore
+import structlog
 from aiohttp import web
 
 from activity.app import init
@@ -24,6 +25,6 @@ def distribution(monkeypatch):
 @pytest.fixture(scope="function")
 def app(distribution) -> web.Application:
     """Prepare test application."""
-    app = init("wallet")
+    app = init("wallet", logger=structlog.get_logger("activity"))
 
     return app
