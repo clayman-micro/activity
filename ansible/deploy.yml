@@ -22,6 +22,8 @@
   vars:
     app: activity
 
+    domain: "{{ lookup('env','DOMAIN')|default('activity.clayman.pro') }}"
+
     namespace: "{{ lookup('env','NAMESPACE')|default('micro') }}"
     serviceAccount: micro
 
@@ -29,7 +31,6 @@
     version: "{{ lookup('env','ACTIVITY_VERSION')|default('master') }}"
 
     replicas: "{{ lookup('env','REPLICAS')|default('1') }}"
-
   tasks:
     - name: Prepare folder for charts
       file:
@@ -60,6 +61,12 @@
 
           imagePullSecrets:
             - name: ghcr
+
+          ingress:
+            enabled: true
+
+            rules:
+              - Host(`"{{ domain }}"`)
 
           migrations:
             enabled: false

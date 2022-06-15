@@ -104,6 +104,7 @@ jobs:
         id: vault
         uses: clayman-micro/action-deploy@v2.0.0
         env:
+          DOMAIN: activity.staging.clayman.pro
           NAMESPACE: staging
           ACTIVITY_VERSION: master
           REPLICAS: 2
