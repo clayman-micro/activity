@@ -59,9 +59,9 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: Set output
+      - name: Get current commit sha
         id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
       - name: Log in to the Container registry
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
