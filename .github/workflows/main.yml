@@ -81,7 +81,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.vars.outputs.sha_short }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Send notification to Telegram
@@ -91,8 +91,8 @@ jobs:
           to: ${{ secrets.TELEGRAM_CHAT }}
           token: ${{ secrets.TELEGRAM_SECRET }}
           args: |
-            ${{ github.repository }} build version `master` - ${{ job.status }}
-            Image `ghcr.io/${{ github.repository }}:master` ready to use
+            ${{ github.repository }} build version `master` - ${{ job.status }}\n.
+            Image `${{ steps.meta.outputs.labels }}:${{ steps.vars.outputs.sha_short }}` ready to use.
 
   deploy:
     needs: [build]
@@ -100,13 +100,17 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
+      - name: Get current commit sha
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
       - name: Deploy new version
         id: vault
         uses: clayman-micro/action-deploy@v2.0.0
         env:
           DOMAIN: activity.staging.clayman.pro
           NAMESPACE: staging
-          ACTIVITY_VERSION: master
+          ACTIVITY_VERSION: ${{ steps.vars.outputs.sha_short }}
           REPLICAS: 2
           SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
         with:
