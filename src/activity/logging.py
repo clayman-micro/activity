@@ -1,11 +1,13 @@
 import socket
 from logging.config import dictConfig
 from typing import Callable
+from uuid import uuid4
 
 import pkg_resources
 import structlog
 import ujson
-from structlog.contextvars import merge_contextvars
+from aiohttp import web
+from structlog.contextvars import bind_contextvars, clear_contextvars, merge_contextvars
 from structlog.types import EventDict, WrappedLogger
 
 
@@ -108,3 +110,36 @@ def configure_logging(app_name: str, debug: bool = False) -> None:
         logger_factory=structlog.stdlib.LoggerFactory(),
         wrapper_class=structlog.stdlib.BoundLogger,
     )
+
+
+@web.middleware
+async def middleware(request, handler):
+    """Logging middleware.
+
+    Args:
+        request: Current request instance.
+        handler: Handler for request.
+    """
+    clear_contextvars()
+
+    context_vars = {
+        "request_id": request.headers.get("X-Request-ID", str(uuid4().hex)),
+        "request_method": request.method,
+    }
+
+    if "X-Correlation-ID" in request.headers:
+        context_vars["correlation_id"] = request.headers["X-Correlation-ID"]
+
+    bind_contextvars(**context_vars)
+
+    resp = await handler(request)
+
+    bind_contextvars(response_status=resp.status)
+    return resp
+
+
+def setup(app: web.Application, logger: WrappedLogger):
+    """Setup application logger."""
+    app.logger = logger.bind()
+
+    app.middlewares.append(middleware)  # type: ignore
