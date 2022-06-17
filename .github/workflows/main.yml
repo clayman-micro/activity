@@ -71,6 +71,9 @@ jobs:
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            # set latest tag for master branch
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'master') }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
@@ -102,7 +105,7 @@ jobs:
         env:
           DOMAIN: activity.staging.clayman.pro
           NAMESPACE: staging
-          ACTIVITY_VERSION: master
+          ACTIVITY_VERSION: latest
           REPLICAS: 2
           SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
         with:
