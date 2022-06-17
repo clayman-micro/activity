@@ -49,6 +49,7 @@
         name: "{{ app }}"
         chart_ref: /opt/micro/helm-chart/charts/micro
         release_namespace: "{{ namespace }}"
+        force: true
         values:
           image:
             repository: "{{ image }}"
