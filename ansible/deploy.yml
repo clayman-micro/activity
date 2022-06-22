@@ -41,7 +41,7 @@
     - name: Get Helm charts
       ansible.builtin.git:
         repo: "https://github.com/clayman-micro/helm-chart.git"
-        version: v2.0.0
+        version: v2.2.0
         dest: /opt/micro/helm-chart
 
     - name: Deploy Helm chart
@@ -64,7 +64,7 @@
             - name: ghcr
 
           ingress:
-            enabled: true
+            enabled: false
 
             rules:
               - "Host(`{{ domain }}`)"
