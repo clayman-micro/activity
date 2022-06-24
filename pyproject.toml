@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "activity"
-version = "0.2.0-alpha.0"
+version = "0.2.0-alpha.1"
 description = "Personal workout activities"
 authors = ["Kirill Sumorokov <sumorokov.k@gmail.com>"]
 license = "MIT"

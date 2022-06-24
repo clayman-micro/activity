@@ -123,7 +123,7 @@ async def middleware(request, handler):
     clear_contextvars()
 
     context_vars = {
-        "request_id": request.headers.get("X-Request-ID", str(uuid4().hex)),
+        "request_id": request.headers.get("X-B3-Traceid", str(uuid4().hex)),
         "request_method": request.method,
     }
 
