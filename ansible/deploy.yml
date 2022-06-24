@@ -64,7 +64,7 @@
             - name: ghcr
 
           ingress:
-            enabled: false
+            enabled: true
 
             rules:
               - "Host(`{{ domain }}`)"
