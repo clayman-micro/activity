@@ -88,9 +88,7 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_CHAT }}
           token: ${{ secrets.TELEGRAM_SECRET }}
-          args: |
-            ${{ github.repository }} build version `master` - ${{ job.status }}
-            Image `${{ steps.meta.outputs.labels }}:${{ steps.meta.outputs.tags }}` ready to use
+          args: ${{ github.repository }} build version `master` - ${{ job.status }}
 
   deploy:
     needs: [build]
@@ -103,7 +101,7 @@ jobs:
         uses: clayman-micro/action-deploy@v2.0.0
         env:
           DOMAIN: activity.staging.clayman.pro
-          NAMESPACE: staging
+          NAMESPACE: micro-staging
           ACTIVITY_VERSION: latest
           REPLICAS: 2
           SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
