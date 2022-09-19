@@ -2,19 +2,18 @@ import socket
 
 import pkg_resources
 from aiohttp import web
-from structlog.types import WrappedLogger
 
 from activity.logging import setup as setup_logging
 from activity.metrics import setup as setup_metrics
 from activity.web import meta
 
 
-def init(app_name: str, logger: WrappedLogger) -> web.Application:
+def init(app_name: str, debug: bool = False) -> web.Application:
     """Create application instance.
 
     Args:
         app_name: Application name.
-        logger: Logger instance.
+        debug: Run application in debug mode.
 
     Return:
         New application instance.
@@ -25,7 +24,9 @@ def init(app_name: str, logger: WrappedLogger) -> web.Application:
     app["hostname"] = socket.gethostname()
     app["distribution"] = pkg_resources.get_distribution(app_name)
 
-    setup_logging(app, logger=logger)
+    app["debug"] = debug
+
+    setup_logging(app)
     setup_metrics(app)
 
     app.router.add_get("/-/meta", handler=meta.index, name="meta", allow_head=False)

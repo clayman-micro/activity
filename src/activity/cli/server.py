@@ -51,7 +51,6 @@ def run(ctx, host, port) -> None:
         port: Application port.
     """
     app: web.Application = ctx.obj["app"]
-    logger = ctx.obj["logger"]
 
     try:
         port = int(port)
@@ -73,7 +72,7 @@ def run(ctx, host, port) -> None:
         app,
         host=host,
         port=port,
-        access_log=logger.bind(context="access"),
+        access_log=app.logger.bind(context="access"),
         access_log_format="%r",
         print=lambda foo: None,
     )

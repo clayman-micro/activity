@@ -138,8 +138,15 @@ async def middleware(request, handler):
     return resp
 
 
-def setup(app: web.Application, logger: WrappedLogger):
-    """Setup application logger."""
-    app.logger = logger.bind()
+def setup(app: web.Application) -> None:
+    """Setup application logger.
 
+    Args:
+        app: Application instance.
+        debug: Application
+
+    """
+    configure_logging(app_name=app["app_name"], debug=app["debug"])
+
+    app.logger = structlog.get_logger(app["app_name"])
     app.middlewares.append(middleware)  # type: ignore
