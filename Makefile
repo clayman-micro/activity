@@ -1,6 +1,7 @@
 .PHONY: clean clean-test clean-pyc clean-build
 NAME	:= ghcr.io/clayman-micro/activity
 VERSION ?= latest
+NAMESPACE ?= micro
 HOST ?= 0.0.0.0
 PORT ?= 5000
 
@@ -39,7 +40,7 @@ test:
 	poetry run pytest
 
 tests:
-	tox -- --pg-host=$(POSTGRES_HOST) --pg-database=wallet_tests
+	tox
 
 build:
 	docker build -t ${NAME} .
@@ -48,3 +49,18 @@ build:
 publish:
 	docker login -u $(DOCKER_USER) -p $(DOCKER_PASS) ghcr.io
 	docker push ${NAME}
+
+deploy:
+	helm install activity ../helm-chart/charts/micro \
+		--namespace ${NAMESPACE} \
+		--set image.repository=${NAME} \
+		--set image.tag=$(VERSION) \
+		--set replicas=$(REPLICAS) \
+		--set serviceAccount.name=micro \
+		--set imagePullSecrets[0].name=ghcr \
+		--set ingress.enabled=true \
+		--set ingress.rules={"Host(\`$(DOMAIN)\`)"} \
+		--set migrations.enabled=false \
+		--set livenessProbe.enabled=true \
+		--set readinessProbe.enabled=true
+

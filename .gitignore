@@ -54,13 +54,7 @@ nosetests.xml
 .env
 .envrc
 ansible/.credentials
-conf/*
 venv
-
-backups
-operations/*.csv
-kube.*
-
 
 # Ignore DevSpace cache and log folder
 .devspace/

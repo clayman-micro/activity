@@ -72,7 +72,7 @@ def run(ctx, host, port) -> None:
         app,
         host=host,
         port=port,
-        access_log=app.logger.bind(context="access"),
+        access_log=app.logger.bind(context="access"),  # type: ignore
         access_log_format="%r",
         print=lambda foo: None,
     )
